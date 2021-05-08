@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,40 +8,37 @@
     <title>聊天室</title>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <style>
-        .login{
-            display:flex;
+        .login {
+            display: flex;
             margin: 200px auto;
             width: 300px;
             line-height: 40px;
         }
-        .content{
-            display:flex;
+        
+        .content {
+            display: flex;
         }
     </style>
 </head>
+
 <body>
     <div id="app">
         <div v-if="connectStatus" class="content">
-            <el-input
-                placeholder="请输入内容"
-                v-model="msg"
-                clearable>
+            <el-input placeholder="请输入内容" v-model="msg" clearable>
             </el-input>
-            <el-button @click="send" style="height: 40px;" type="primary">退出聊天室</el-button>
+            <el-button @click="close" style="height: 40px;" type="primary">退出聊天室</el-button>
         </div>
         <div v-else class="login">
-            <el-input
-                placeholder="请输入网名"
-                v-model="name"
-                clearable>
+            <el-input placeholder="请输入网名" v-model="name" clearable>
             </el-input>
-            <el-button @click="connect" type="primary">连接聊天室</el-button>
+            <el-button @click="login" type="primary">连接聊天室</el-button>
         </div>
 
     </div>
     <script crossorigin="anonymous" integrity="sha512-h3aCJRk6tEHugDYUidF7GqixhzgeXSiSdq5U+5oLIJtIncSQq6eev48qqYfuTdrsH5Q1eO4IAmyJGDwzRaWNNQ==" src="https://lib.baomitu.com/vue/2.6.12/vue.common.dev.js"></script>
     <script crossorigin="anonymous" integrity="sha512-h7zmQdtkycoMlJAW9RvJQ3lSFgesJYQGTA4qo6DDzDlULYmiZOufLnIMiMJwfDZmg0RaxanwAQtOpWurPUf+iA==" src="https://lib.baomitu.com/element-ui/2.15.1/index.js"></script>
-    <script crossorigin="anonymous" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" src="https://lib.baomitu.com/axios/0.21.1/axios.js"></script>
+    <!-- <script crossorigin="anonymous" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" src="https://lib.baomitu.com/axios/0.21.1/axios.js"></script> -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <script>
         let vm = new Vue({
             el: "#app",
@@ -50,48 +48,84 @@
                     name: "",
                     msg: "",
                     ws: null,
-                    url: "ws://localhost:3000/ws/test"
+                    url: "ws://mytest.cn.utools.club/ws/test"
                 }
             },
             methods: {
-                connect() {
-                    if(!this.name) {
+                login() {
+                    if (!this.name) {
                         this.$message({
                             type: "warning",
                             message: "请输入网名"
                         })
                         return
                     }
+                    $.ajax({
+                        url: "http://mytest.cn.utools.club/ws/login",
+                        method: "POST",
+                        data: {
+                            name: this.name
+                        },
+                        success: (res) => {
+                            console.log(res)
+                            this.connect()
+                        }
+                    })
+                },
+                connect() {
                     this.ws = new WebSocket(this.url);
                     this.ws.onopen = () => {
                         this.connectStatus = true
-                        this.ws.send(this.name+"进入聊天室")
+                            // this.ws.send(this.name + "进入聊天室")
                     }
-                    this.ws.onmessage = () => {
+                    this.ws.onmessage = this.message
 
-                    }
-                    
                     this.ws.onerror = () => {
                         this.$notify.error({
-                            title: 'warning',
+                            title: '提示',
                             message: '连接错误'
                         });
-                        this.close()
+                        this.connect()
                     }
                     this.ws.onclose = () => {
-                        this.$notify.error({
-                            title: 'error',
-                            message: this.name+"退出了聊天室"
+                        this.$notify.info({
+                            title: '提示',
+                            message: this.name + "退出了聊天室"
                         });
                     }
+                    this.timer = setInterval(() => {
+                        if (this.connectStatus) this.ws.send(JSON.stringify({
+                            type: 'xt',
+                            data: 666
+                        }))
+                    }, 3000);
                 },
                 send() {
                     this.ws.send(this.msg)
                 },
-                message() {
+                message(d) {
+                    let {
+                        data
+                    } = d
+                    let current = JSON.parse(data)
+                    if (current.type == "xt") {
 
+                    } else if (current.type == "user-join") {
+                        console.log(d);
+
+                        this.$notify.success({
+                            title: '提示',
+                            message: current.name + "加入了聊天室"
+                        });
+                    } else if (current.type == "leave") {
+                        this.$notify.info({
+                            title: '提示',
+                            message: current.name + "退出了聊天室"
+                        });
+                    }
                 },
                 close() {
+                    clearInterval(this.timer)
                     this.ws.close()
                 }
 
@@ -99,4 +133,5 @@
         })
     </script>
 </body>
+
 </html>
