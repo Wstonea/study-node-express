@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>study-websoket</title>
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <div id="app">
+      <button id="ws-create">Create</button>
+      <button id="ws-send">Send</button>
+      <button id="ws-close">Close</button>
+      <button id="ws-show">Show</button>
+    </div>
+    <script>
+      window.onload = function () {
+        console.log("window load");
+        // 建立代理对象
+        const proxy = new WebSocketProxy();
+
+        // 将对象的各个方法绑定到按钮方法，注意方法内部 this 的指向问题
+        document.getElementById("ws-create").onclick = () => proxy.create();
+        document.getElementById("ws-send").onclick = () => proxy.send();
+        document.getElementById("ws-close").onclick = () => proxy.close();
+        document.getElementById("ws-show").onclick = () => {
+          proxy.log("show messages");
+          console.log(proxy.messages);
+        };
+      };
+
+      function WebSocketProxy(url) {
+        this.url = url || "ws://localhost:3000/ws/test";
+        // this.url = url || "ws://localhost:3002/socketTest";
+        this.socket = undefined;
+        this.messages = [];
+      }
+
+      WebSocketProxy.prototype.create = function createSocket() {
+        if (!WebSocket) {
+          console.log("Sorry! Your browser doesn't support WebSocket");
+          return;
+        }
+        if (this.socket) {
+          console.log("Connection already exist");
+          console.log(this.socket);
+          return;
+        }
+
+        try {
+          this.log(`create socket with url: ${this.url}`);
+          this.socket = new WebSocket(this.url);
+
+          const self = this;
+          console.log(this.socket);
+          // 连接开启
+          this.socket.onopen = function (e) {
+            console.log("on open");
+          };
+          // 连接错误
+          this.socket.onerror = function (e) {
+            console.log("on error");
+            self.close();
+          };
+          // 消息通知
+          this.socket.onmessage = function ({ data: msg }) {
+            self.messages.push(msg);
+            self.log("receive message");
+            console.log(msg);
+          };
+        } catch (err) {
+          console.log(err);
+          this.close();
+        }
+      };
+
+      WebSocketProxy.prototype.send = function sendMessage(msg) {
+        if (!this.socket) {
+          this.log("socket doesn't exist");
+          return;
+        }
+        msg = msg || "default message";
+        this.socket.send(msg);
+        this.log("message sent");
+      };
+
+      WebSocketProxy.prototype.close = function closeSocket() {
+        if (!this.socket) {
+          this.log("socket doesn't exist");
+          return;
+        }
+        this.socket.close();
+        this.socket = undefined;
+        this.log("socket close");
+      };
+
+      WebSocketProxy.prototype.log = function (msg) {
+        const prefix = "[WebSocketProxy]";
+        console.log(`${prefix}${msg}`);
+      };
+    </script>
+  </body>
+</html>

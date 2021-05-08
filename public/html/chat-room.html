@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .login{
+            display:flex;
+            margin: 200px auto;
+            width: 300px;
+            line-height: 40px;
+        }
+        .content{
+            display:flex;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div v-if="connectStatus" class="content">
+            <el-input
+                placeholder="请输入内容"
+                v-model="msg"
+                clearable>
+            </el-input>
+            <el-button @click="send" style="height: 40px;" type="primary">退出聊天室</el-button>
+        </div>
+        <div v-else class="login">
+            <el-input
+                placeholder="请输入网名"
+                v-model="name"
+                clearable>
+            </el-input>
+            <el-button @click="connect" type="primary">连接聊天室</el-button>
+        </div>
+
+    </div>
+    <script crossorigin="anonymous" integrity="sha512-h3aCJRk6tEHugDYUidF7GqixhzgeXSiSdq5U+5oLIJtIncSQq6eev48qqYfuTdrsH5Q1eO4IAmyJGDwzRaWNNQ==" src="https://lib.baomitu.com/vue/2.6.12/vue.common.dev.js"></script>
+    <script crossorigin="anonymous" integrity="sha512-h7zmQdtkycoMlJAW9RvJQ3lSFgesJYQGTA4qo6DDzDlULYmiZOufLnIMiMJwfDZmg0RaxanwAQtOpWurPUf+iA==" src="https://lib.baomitu.com/element-ui/2.15.1/index.js"></script>
+    <script crossorigin="anonymous" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" src="https://lib.baomitu.com/axios/0.21.1/axios.js"></script>
+    <script>
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    connectStatus: false,
+                    name: "",
+                    msg: "",
+                    ws: null,
+                    url: "ws://localhost:3000/ws/test"
+                }
+            },
+            methods: {
+                connect() {
+                    if(!this.name) {
+                        this.$message({
+                            type: "warning",
+                            message: "请输入网名"
+                        })
+                        return
+                    }
+                    this.ws = new WebSocket(this.url);
+                    this.ws.onopen = () => {
+                        this.connectStatus = true
+                        this.ws.send(this.name+"进入聊天室")
+                    }
+                    this.ws.onmessage = () => {
+
+                    }
+                    
+                    this.ws.onerror = () => {
+                        this.$notify.error({
+                            title: 'warning',
+                            message: '连接错误'
+                        });
+                        this.close()
+                    }
+                    this.ws.onclose = () => {
+                        this.$notify.error({
+                            title: 'error',
+                            message: this.name+"退出了聊天室"
+                        });
+                    }
+                },
+                send() {
+                    this.ws.send(this.msg)
+                },
+                message() {
+
+                },
+                close() {
+                    this.ws.close()
+                }
+
+            },
+        })
+    </script>
+</body>
+</html>
