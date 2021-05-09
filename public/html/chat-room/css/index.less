@@ -1,0 +1,280 @@
+
+.login {
+    display: flex;
+    margin: 200px auto;
+    width: 300px;
+    line-height: 40px;
+}
+
+.content {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 100px auto;
+    width: 80%;
+    height: 80%;
+    max-height: 600px;
+    min-height: 300px;
+    max-width: 800px;
+    border: 1px solid pink;
+    overflow: hidden;
+    .user-list{
+        flex: 1;
+        min-width: 200px;
+        box-shadow: 0 0 2px red;
+        overflow-y: scroll;
+        /*修改滚动条样式*/
+        &::-webkit-scrollbar{
+            width:10px;
+            height:10px;
+            /**/
+        }
+        &::-webkit-scrollbar-track{
+            background: rgb(239, 239, 239);
+            border-radius:2px;
+        }
+        &::-webkit-scrollbar-thumb{
+            background: #bfbfbf;
+            border-radius:10px;
+        }
+        &::-webkit-scrollbar-thumb:hover{
+            background: #333;
+        }
+        &::-webkit-scrollbar-corner{
+            background: #179a16;
+        }
+        h3{
+            padding: 5px 10px;
+            line-height: 40px;
+            background-color: #dfeaec;
+        }
+        li{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 3px 10px;
+            height: 40px;
+            border-bottom: 1px solid #ececec;
+            &:hover{
+                background-color: #d5e7f5;
+            }
+            img{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+            >div{
+                width: calc(100% - 40px);
+            }
+            .info{
+                display: flex;
+                box-sizing: border-box;
+                flex-wrap: nowrap;
+                padding-left: 5px;
+                height: 60%;
+                font-size: 18px;
+                div:first-child{
+                    width: 50%;
+                }
+                .city{
+                    width: 50%;
+                    transform: translateY(1px);
+                    p:first-child{
+                        text-align: right;
+                        font-size: 16px;
+                    }
+                    p:last-child{
+                        font-size: 14px;
+                        text-align: right;
+                    }
+                }
+            }
+            .time{
+                height: 40%;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+        }
+    }
+    .chat-content{
+        flex: 4;
+        box-shadow: 0 0 2px green;
+        display: flex;
+        flex-wrap: wrap;
+        >div{
+            width: 100%;
+        }
+        h3{
+            padding-left: 10px;
+            width: 100%;
+            color: white;
+            line-height: 40px;
+            background-color: #356397;
+        }
+        .news{
+            box-sizing: border-box;
+            padding: 10px 10px 10px;
+            width: 100%;
+            height: calc(100% - 128px - 40px);
+            box-shadow: 0 0 2px black;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            transition: .3s;
+            /*修改滚动条样式*/
+            &::-webkit-scrollbar{
+                width:10px;
+                height:10px;
+                /**/
+            }
+            &::-webkit-scrollbar-track{
+                background: rgb(239, 239, 239);
+                border-radius:2px;
+            }
+            &::-webkit-scrollbar-thumb{
+                background: #bfbfbf;
+                border-radius:10px;
+            }
+            &::-webkit-scrollbar-thumb:hover{
+                background: #333;
+            }
+            &::-webkit-scrollbar-corner{
+                background: #179a16;
+            }
+            li{
+                display: flex;
+                margin-top: 35px;
+                &:first-child{
+                    margin-top: 10px;
+                }
+                .avatar{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .text{
+                    position: relative;
+                    padding-left: 10px;
+                    width: calc(100% - 50px);
+                    &::before{
+                        content:"";
+                        display: inline-block;
+                        position: absolute;
+                        top: 5px;
+                        left: 0;
+                        border: 5px solid #d5e7f5;
+                        border-top-color: transparent;
+                        border-bottom-color: transparent;
+                        border-left-color: transparent;
+                    }
+                    span{
+                        display: inline-block;
+                        position: relative;
+                        box-sizing: border-box;
+                        padding: 5px 10px;
+                        max-width: 80%;
+                        background-color: #d5e7f5;
+                        font-size: 14px;
+                        border-radius: 5px;
+                        word-break: break-all;
+                        &::before{
+                            content: attr(time);
+                            position: absolute;
+                            left: -10px;
+                            bottom: -0%;
+                            transform: scale(0.8) translateY(150%);
+                            white-space: nowrap;
+                        }
+                        &::after{
+                            content: attr(name);
+                            position: absolute;
+                            left: 0px;
+                            top: -0%;
+                            transform: scale(0.8) translateY(-130%);
+                            white-space: nowrap;
+                        }
+                    }
+                }
+            }
+            .me{
+                flex-direction: row-reverse;
+                .text{
+                    display: flex;
+                    flex-direction: row-reverse;
+                    padding-right: 10px;
+                    align-items: baseline;
+                    &::before{
+                        content:"";
+                        display: inline-block;
+                        position: absolute;
+                        top: 5px !important;
+                        left: unset !important;
+                        right: 0;
+                        border: 5px solid #4492e5 !important;
+                        border-top-color: transparent !important;
+                        border-bottom-color: transparent !important;
+                        border-right-color: transparent !important;
+                    }
+                    span{
+                        background-color: #4492e5;
+                        color: white;
+                        &::before{
+                            left: unset;
+                            right: -10px !important;
+                            color: black;
+                        }
+                        &::after{
+                            content: attr(name);
+                            position: absolute;
+                            right: 0px !important;
+                            top: -0% !important;
+                            transform: scale(0.8) translateY(-130%) !important;
+                            white-space: nowrap;
+                            text-align: right;
+                            color: black;
+                        }
+                    }
+                }
+            }
+        }
+        .control{
+            padding: 1px;
+            height: 128px;
+            box-shadow: 0 0 2px black;
+            &:after{
+                content: "";
+                display: inline-block;
+                position: relative;
+                left: 100%;
+                bottom: 40px;
+                background-color: #ffffff;
+                width: 10px;
+                height: 10px;
+                transform: translateX(-10px);
+            }
+            textarea{
+                padding-right: 10px !important;
+                min-height: 90px !important;
+                max-height: 90px;
+                border: unset;
+                overflow: hidden;
+                &:focus{
+                    border: unset;
+                }
+            }
+            .btn{
+                display: flex;
+                justify-content: flex-end;
+                padding-right: 10px;
+                >div{
+                    // margin-left: 15;
+                }
+            }
+        }
+    }
+} 
+
+[v-cloak] {
+    display: none !important;
+}

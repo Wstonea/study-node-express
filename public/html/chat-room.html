@@ -35,7 +35,8 @@
         </div>
 
     </div>
-    <script crossorigin="anonymous" integrity="sha512-h3aCJRk6tEHugDYUidF7GqixhzgeXSiSdq5U+5oLIJtIncSQq6eev48qqYfuTdrsH5Q1eO4IAmyJGDwzRaWNNQ==" src="https://lib.baomitu.com/vue/2.6.12/vue.common.dev.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.common.dev.js"></script>
+    <!-- <script crossorigin="anonymous" integrity="sha512-h3aCJRk6tEHugDYUidF7GqixhzgeXSiSdq5U+5oLIJtIncSQq6eev48qqYfuTdrsH5Q1eO4IAmyJGDwzRaWNNQ==" src="https://lib.baomitu.com/vue/2.6.12/vue.common.dev.js"></script> -->
     <script crossorigin="anonymous" integrity="sha512-h7zmQdtkycoMlJAW9RvJQ3lSFgesJYQGTA4qo6DDzDlULYmiZOufLnIMiMJwfDZmg0RaxanwAQtOpWurPUf+iA==" src="https://lib.baomitu.com/element-ui/2.15.1/index.js"></script>
     <!-- <script crossorigin="anonymous" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" src="https://lib.baomitu.com/axios/0.21.1/axios.js"></script> -->
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
@@ -48,7 +49,7 @@
                     name: "",
                     msg: "",
                     ws: null,
-                    url: "ws://mytest.cn.utools.club/ws/test"
+                    url: "ws://chatroom.cn.utools.club/ws/test"
                 }
             },
             methods: {
@@ -61,7 +62,7 @@
                         return
                     }
                     $.ajax({
-                        url: "http://mytest.cn.utools.club/ws/login",
+                        url: "http://chatroom.cn.utools.club/ws/login",
                         method: "POST",
                         data: {
                             name: this.name

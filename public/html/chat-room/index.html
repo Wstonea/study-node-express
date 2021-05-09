@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="/stylesheets/reset.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div v-cloak id="app">
+
+        <div v-if="!connectStatus" class="login">
+            <el-input placeholder="请输入网名" v-model="name" clearable>
+            </el-input>
+            <el-button @click="login" type="primary">连接聊天室</el-button>
+        </div>
+
+        <div v-if="connectStatus" class="content">
+            <ul class="user-list">
+                <h3>
+                    <span>用户列表</span>
+                </h3>
+                <li v-for="item in userList" :key="item.id">
+                    <img :src="item.avatar" alt="">
+                    <div class="info">
+                        <div>{{item.name}}</div>
+                        <div class="city">
+                            <p>{{item.addr.region}}</p>
+                            <p>{{item.addr.city}}</p>
+                        </div>
+                    </div>
+                    <!-- <div class="time">
+                        {{item.joinTime}}
+                    </div> -->
+                </li>
+            </ul>
+            <div class="chat-content">
+                <h3>简陋聊天室（{{allUser}}）</h3>
+                <ul class="news" ref="news">
+                    <li v-for="(item, index) of newList" :key="index" :class="item.name == myInfo.name? 'me':''">
+                        <div class="avatar">
+                            <img :src="item.avatar" alt="">
+                        </div>
+                        <div class="text">
+                            <span :name="item.name" :time="item.time">{{item.text}}</span>
+                        </div>
+                    </li>
+                </ul>
+                <div class="control">
+                    <div class="input">
+                        <el-input clearable type="textarea" :autosize="{ minRows: 2, maxRows: 3}" placeholder="请输入内容..." v-model="msg">
+                        </el-input>
+                    </div>
+                    <div class="btn">
+                        <el-button size="mini" @click="close">退出聊天室</el-button>
+                        <el-button size="mini" @click="send" @keyup.native.enter="send" type="primary">发送</el-button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.common.dev.js"></script>
+    <script crossorigin="anonymous" integrity="sha512-h7zmQdtkycoMlJAW9RvJQ3lSFgesJYQGTA4qo6DDzDlULYmiZOufLnIMiMJwfDZmg0RaxanwAQtOpWurPUf+iA==" src="https://lib.baomitu.com/element-ui/2.15.1/index.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+
+</html>
